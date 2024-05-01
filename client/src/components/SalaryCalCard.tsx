@@ -8,7 +8,6 @@ import ResetImg from "../assets/reset.png";
 import AddImg from "../assets/add.png";
 import CheckBox from "./CheckBox";
 import SalarySlip from "./SalarySlip";
-import { set } from "mongoose";
 
 
 interface SalaryCalCardProps {
@@ -60,51 +59,40 @@ const SalaryCalCard: React.FC<SalaryCalCardProps> = () => {
     //Total  Basic Salary
     const totalBasicSalary = () => {
         console.log("Basic Salary" , basic_Salary);
+        return basic_Salary;
     }
 
     //Total Earnings
     const calculateEarnings = () => {
         let total = basic_Salary;
-        earningAmounts.forEach((value)=>{
-            if (value){
+        earningAmounts.forEach((value) => {
+            if (value) {
                 total += parseInt(value);
             }
         });
-        console.log("Amout Earning :",total);
+        console.log("Amount Earning :", total);
         return total;
-    }
-
-    //Total Calculate Deductions
-    const calculateDeductions = () => {
-        let totalDeduction = 0;
-        deductionAmounts.forEach((value)=>{
-            if (value){
-                totalDeduction += parseInt(value);
-            }
-        });
-        console.log("Amout Deduction :",totalDeduction);
-        return totalDeduction;
     }
 
     //Total Earnings for EPF
     const empEpfEarning = () => {
         let totalEpfEtf = basic_Salary;
-        earningAmounts.forEach((value, index)=>{
-            if(value && epf_etf[index]){
+        earningAmounts.forEach((value, index) => {
+            if (value && epf_etf[index]) {
                 totalEpfEtf += parseInt(value);
             }
         });
-        console.log("EPF/ETF Earning :",totalEpfEtf);
+        console.log("EPF/ETF Earning :", totalEpfEtf);
         return totalEpfEtf;
     }
 
     //Gross Deduction 
     const grossDeduction = () => {
         let totalGrossDeduction = 0;
-            deductionAmounts.forEach((value, index)=>{
-                if(value && deductionsItems[index]){
-                    totalGrossDeduction += parseInt(value);
-                }
+        deductionAmounts.forEach((value, index)=>{
+            if(value && deductionsItems[index]){
+                totalGrossDeduction += parseInt(value);
+            }
         });
         console.log("Gross Deduction :",totalGrossDeduction);
         return totalGrossDeduction        
@@ -113,77 +101,74 @@ const SalaryCalCard: React.FC<SalaryCalCardProps> = () => {
     //Gross Earnings
     const grossEarning = () => {
         let totalGrossEarning = calculateEarnings() - grossDeduction();
-        console.log("Gross Earning :",totalGrossEarning);
+        console.log("Gross Earning :", totalGrossEarning);
         return totalGrossEarning;
     }
 
     //Gross Salary for EPF
     const grossSalaryEpf = () => {
-        let totalgrossSalaryEpf = empEpfEarning() - grossDeduction()
-        console.log("Gross Salary for EPF :",totalgrossSalaryEpf);
+        let totalgrossSalaryEpf = empEpfEarning() - grossDeduction();
+        console.log("Gross Salary for EPF :", totalgrossSalaryEpf);
         return totalgrossSalaryEpf;
     }
 
     //Employee EPF (8%)
     const employeeEpf = () => {
         let totalEmployeeEpf = (grossSalaryEpf() * 8 ) / 100;
-        console.log("Employee EPF :",totalEmployeeEpf);
+        console.log("Employee EPF(8%) :",totalEmployeeEpf);
         return totalEmployeeEpf;
     }
 
     //Employer EPF (12%)
     const employerEpf = () => {
         let totalEmployerEpf = (grossSalaryEpf() * 12) / 100;
-        console.log("Employer EPF :",totalEmployerEpf);
+        console.log("Employer EPF(12%) :",totalEmployerEpf);
         return totalEmployerEpf;
     }
 
     //Employer ETF (3%)
     const employeeEtf = () => {
         let totalEmployeeEtf = (grossSalaryEpf() * 3) / 100;
-        console.log("Employer ETF :",totalEmployeeEtf);
+        console.log("Employer ETF(3%) :",totalEmployeeEtf);
         return totalEmployeeEtf;
     }
 
     //APIT
     const calculateAPIT = () => {
-        let  totalgrossErning = grossEarning();
+        let totalgrossErning = grossEarning();
         let totalSalary;
-
-        if (totalgrossErning === 100000) {
-            totalSalary = totalgrossErning;
-          } else if (totalgrossErning > 100000 && totalgrossErning < 141667) {
-            totalSalary = totalgrossErning * 0.6 - 6000;
-          } else if (totalgrossErning > 141667 && totalgrossErning < 183333) {
+        if (totalgrossErning >= 100000 && totalgrossErning < 141667) {
+            totalSalary = totalgrossErning * 0.06 - 6000;
+        } else if (totalgrossErning >= 141667 && totalgrossErning < 183333) {
             totalSalary = totalgrossErning * 0.12 - 14500;
-          } else if (totalgrossErning > 183333 && totalgrossErning < 225000) {
+        } else if (totalgrossErning >= 183333 && totalgrossErning < 225000) {
             totalSalary = totalgrossErning * 0.18 - 25000;
-          } else if (totalgrossErning > 225000 && totalgrossErning < 266667) {
+        } else if (totalgrossErning >= 225000 && totalgrossErning < 266667) {
             totalSalary = totalgrossErning * 0.24 - 39000;
-          } else if (totalgrossErning > 266667 && totalgrossErning < 308333) {
+        } else if (totalgrossErning >= 266667 && totalgrossErning < 308333) {
             totalSalary = totalgrossErning * 0.3 - 55000;
-          } else if (totalgrossErning > 308333) {
+        } else if (totalgrossErning >= 308333) {
             totalSalary = totalgrossErning * 0.36 - 73500;
-          } else {
-            totalSalary = 0; 
-          }
-
-        console.log("APIT :",totalSalary);
+        } else {
+            totalSalary = 0;
+        }
+        console.log("APIT :", totalSalary);
         return totalSalary;
     }
 
+    
+
     //Net Salary
-    const neSalary = () => {
+    const netSalary = () => {
         let totalNetSalary = grossEarning() - employeeEpf() - calculateAPIT();
-        console.log("Net Salary :",totalNetSalary);
+        console.log("Net Salary :", totalNetSalary);
         return totalNetSalary;
     }
 
-
-    //Cost To Company 
+    //Cost To Company
     const costToCompany = () => {
         let totalCostToCompany = grossEarning() + employerEpf() + employeeEtf();
-        console.log("Cost To Company :",totalCostToCompany);
+        console.log("Cost To Company :", totalCostToCompany);
         return totalCostToCompany;
     }
 
@@ -206,7 +191,6 @@ const SalaryCalCard: React.FC<SalaryCalCardProps> = () => {
     useEffect(()=>{
         totalBasicSalary();
         calculateEarnings();
-        calculateDeductions();
         empEpfEarning();
         grossDeduction();
         grossEarning();
@@ -215,7 +199,7 @@ const SalaryCalCard: React.FC<SalaryCalCardProps> = () => {
         employerEpf();
         employeeEtf();
         calculateAPIT();
-        neSalary();
+        netSalary();
     },[
         basic_Salary,
         earningsItems,
@@ -385,10 +369,10 @@ const SalaryCalCard: React.FC<SalaryCalCardProps> = () => {
                         gross_earning={grossEarning()} 
                         gross_deduction={grossDeduction()} 
                         APIT={calculateAPIT()} 
-                        net_salary={neSalary()} 
+                        net_salary={netSalary()} 
                         cost_Company={costToCompany()} 
                         emp_EPF={employeeEpf()} 
-                        employer_EPF={employeeEpf()} 
+                        employer_EPF={employerEpf()} 
                         employer_ETF={employeeEtf()}                    
                     />
                 </Col>
@@ -398,3 +382,4 @@ const SalaryCalCard: React.FC<SalaryCalCardProps> = () => {
 };
 
 export default SalaryCalCard;
+
