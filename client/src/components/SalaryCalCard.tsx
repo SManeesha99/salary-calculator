@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import "../css/style.css"
 import LabelField from "./Lable";
 import InputField from "./InputTextFiled";
